@@ -1,3 +1,4 @@
+import dg.sample.PaymentRecord
 import java.io.File
 
 /**
@@ -21,8 +22,15 @@ fun main( args:Array<String> ) {
  */
 fun processFile( fileName:String ) {
     println("Parsing file: $fileName");
+    var totalRecords:Int = 0
 
     File(fileName).forEachLine {
-        println("$it")
+        if (it.isNotEmpty()) {
+            val rec:PaymentRecord = PaymentRecord.parse(it)
+            println("rec: $rec")
+            totalRecords++
+        }
     }
+
+    println("Total records parsed: $totalRecords");
 }
