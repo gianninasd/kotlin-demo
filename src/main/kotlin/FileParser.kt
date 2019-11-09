@@ -1,6 +1,7 @@
 import dg.sample.FileLoader
 import dg.sample.PaymentRecord
 import java.io.File
+import java.util.*
 import java.util.logging.Logger
 
 val logger:Logger = Logger.getLogger("blue")
@@ -9,21 +10,36 @@ val logger:Logger = Logger.getLogger("blue")
  * Where application starts
  */
 fun main( args:Array<String> ) {
-    println("////////// SAMPLE 2 //////////")
+    val osName = System.getProperty("os.name")
+    val osVersion  = System.getProperty("os.version")
 
-    logger.info("Processing files in <XXX>")
+    logger.info("Kotlin ${Runtime.version()} File Loader running on $osName $osVersion")
 
-    val fileLoader = FileLoader()
+    // load application config
+    val config = loadProperties()
+
+    val fileLoader = FileLoader(config)
     fileLoader.readFile()
 
     if( args.size == 0 ) {
-        println("Filename missing as argument");
+        println("Filename missing as argument")
     }
     else {
-        processFile( args[0] );
+        processFile( args[0] )
     }
 
     println("//////////////////////////////")
+}
+
+/**
+ * Loads our configuration file from the classpath
+ */
+fun loadProperties():Properties {
+    val properties = Properties()
+    properties.load(ClassLoader.getSystemResourceAsStream("config.properties"))
+    val x = properties.getProperty("client.workingDir")
+    logger.info("x is $x")
+    return properties
 }
 
 /**
@@ -31,8 +47,8 @@ fun main( args:Array<String> ) {
  */
 fun processFile( fileName:String ) {
     //logger.info("Parsing file: $fileName")
-    println("Parsing file: $fileName");
-    var totalRecords:Int = 0
+    println("Parsing file: $fileName")
+    var totalRecords = 0
 
     File(fileName).forEachLine {
         if (it.isNotEmpty()) {
@@ -42,5 +58,5 @@ fun processFile( fileName:String ) {
         }
     }
 
-    println("Total records parsed: $totalRecords");
+    println("Total records parsed: $totalRecords")
 }
