@@ -1,11 +1,20 @@
+import dg.sample.FileLoader
 import dg.sample.PaymentRecord
 import java.io.File
+import java.util.logging.Logger
+
+val logger:Logger = Logger.getLogger("blue")
 
 /**
  * Where application starts
  */
 fun main( args:Array<String> ) {
     println("////////// SAMPLE 2 //////////")
+
+    logger.info("Processing files in <XXX>")
+
+    val fileLoader = FileLoader()
+    fileLoader.readFile()
 
     if( args.size == 0 ) {
         println("Filename missing as argument");
@@ -21,6 +30,7 @@ fun main( args:Array<String> ) {
  * Reads the file provided and parses each record
  */
 fun processFile( fileName:String ) {
+    //logger.info("Parsing file: $fileName")
     println("Parsing file: $fileName");
     var totalRecords:Int = 0
 
