@@ -14,7 +14,7 @@ fun main( args:Array<String> ) {
     val osName = System.getProperty("os.name")
     val osVersion  = System.getProperty("os.version")
 
-    logger.info("Kotlin ${KotlinVersion.CURRENT} File Loader running on $osName $osVersion using JVM ${Runtime.version()}")
+    logger.info("Kotlin ${KotlinVersion.CURRENT} File Loader running on $osName $osVersion")
 
     // load application config
     val config = loadProperties()
