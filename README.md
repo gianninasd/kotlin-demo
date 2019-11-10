@@ -11,3 +11,5 @@ You will see processing output on your console and in a file called `fileloader-
 ## References
 Below are some reference web sites
 * https://kotlinlang.org/docs/reference/
+* https://www.kotlinresources.com/
+* https://khttp.readthedocs.io/en/latest/

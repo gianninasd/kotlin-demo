@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="khttp" type="kotlin.js">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../khttp" />
+    </SOURCES>
+  </library>
+</component>

@@ -30,6 +30,8 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+
+    compile "khttp:khttp:1.0.0"
 }
 
 application {

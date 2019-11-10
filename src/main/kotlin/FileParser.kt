@@ -5,6 +5,8 @@ import java.time.LocalDateTime
 import java.util.*
 import java.util.logging.Logger
 
+import khttp.get
+
 val logger:Logger = Logger.getLogger("fileParser")
 
 /**
@@ -21,6 +23,8 @@ fun main( args:Array<String> ) {
     val workingDir = config.getProperty("client.workingDir")
 
     logger.info("Processing files in $workingDir")
+
+    println(get("http://httpbin.org/ip").jsonObject.getString("origin"))
 
     File(workingDir).walk().forEach {file ->
         if(file.isFile) {
