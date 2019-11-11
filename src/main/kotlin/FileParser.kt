@@ -1,11 +1,10 @@
+import dg.CardClient
 import dg.sample.PaymentRecord
 import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
 import java.util.logging.Logger
-
-import khttp.get
 
 val logger:Logger = Logger.getLogger("fileParser")
 
@@ -21,10 +20,9 @@ fun main( args:Array<String> ) {
     // load application config
     val config = loadProperties()
     val workingDir = config.getProperty("client.workingDir")
+    val cardClient = CardClient(config.getProperty("client.url"), config.getProperty("client.apiKey"))
 
     logger.info("Processing files in $workingDir")
-
-    println(get("http://httpbin.org/ip").jsonObject.getString("origin"))
 
     File(workingDir).walk().forEach {file ->
         if(file.isFile) {
@@ -38,6 +36,8 @@ fun main( args:Array<String> ) {
                 if (it.isNotEmpty()) {
                     val rec:PaymentRecord = PaymentRecord.parse(it)
                     println("rec: $rec")
+                    cardClient.purchase()
+
                     cnt++
                 }
             }

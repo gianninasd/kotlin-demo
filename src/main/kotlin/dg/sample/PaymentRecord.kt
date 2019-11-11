@@ -16,18 +16,16 @@ class PaymentRecord {
     var postalCode: String? = null
 
     override fun toString(): String {
-        return "PaymentRecord{" +
-                "merchantRefNum=" + merchantRefNum +
-                ", amount=" + amount +
+        return "PaymentRecord{merchantRefNum=$merchantRefNum, amount=$amount" +
                 //", cardNumber=xxxx" + cardNumber?.substring(cardNumber.length.minus(4)) +
-                ", email=" + email +
-                ", postalCode=" + postalCode + "}"
+                ", email=$email" +
+                ", postalCode=$postalCode}"
     }
 
     companion object Factory {
         fun parse( record:String ):PaymentRecord {
-            var tokenPosition:Int = 0
-            var paymentRecord:PaymentRecord = PaymentRecord()
+            var tokenPosition = 0
+            val paymentRecord = PaymentRecord()
 
             val tokens = record.split(",")
 
