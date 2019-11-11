@@ -3,7 +3,6 @@ package dg
 import khttp.post
 import java.lang.Exception
 import java.util.logging.Logger
-import kotlin.math.log
 
 /**
  * Client class used to call an external REST API for transaction processing
