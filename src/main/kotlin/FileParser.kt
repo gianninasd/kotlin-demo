@@ -43,7 +43,7 @@ fun main( args:Array<String> ) {
 
             val endTime = LocalDateTime.now()
             val duration = Duration.between(startTime, endTime)
-            logger.info("Finished storing $cnt records in ${duration.seconds} seconds")
+            logger.info("Finished processing $cnt records in ${duration.seconds} seconds")
         }
     }
 }
