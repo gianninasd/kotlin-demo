@@ -35,7 +35,6 @@ fun main( args:Array<String> ) {
             file.forEachLine {
                 if (it.isNotEmpty()) {
                     val rec:PaymentRecord = PaymentRecord.parse(it)
-                    println("rec: $rec")
                     cardClient.purchase()
 
                     cnt++
