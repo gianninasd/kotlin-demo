@@ -1,4 +1,4 @@
-package dg.sample
+package dg
 
 /**
  * Represents a payment record to process
@@ -23,7 +23,7 @@ class PaymentRecord {
     }
 
     companion object Factory {
-        fun parse( record:String ):PaymentRecord {
+        fun parse( record:String ): PaymentRecord {
             var tokenPosition = 0
             val paymentRecord = PaymentRecord()
 
