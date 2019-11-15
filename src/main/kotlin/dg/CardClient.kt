@@ -16,21 +16,17 @@ class CardClient(val url:String, val apiKey:String) {
     /**
      * ends a purchase request to a remote REST API
      */
-    fun purchase() {
+    fun purchase( req:CardRequest ) {
         val gsonTranslator = Gson()
         val uri = "/cardpayments/v1/accounts/1001289630/auths"
         val headers = mapOf("Authorization" to "Basic $apiKey", "Content-Type" to "application/json")
         val guid = UUID.randomUUID().toString()
 
-        val req = CardRequest(guid)
-        req.amount = 1500
-        req.card.cardNum = "4111111111111111"
-        req.card.cardExpiry.month = "10"
-        req.card.cardExpiry.year = "2021"
-        req.billingDetails.zip = "H8P3S2"
+        req.guid = guid
+        req.merchantRefNum = guid // overriden for the request to succeed
 
         try {
-            logger.info("Sending ${req.merchantRefNum}")
+            logger.info("Sending ${req.guid}")
             // make request
             val res = post(url = url + uri, headers = headers, data = gsonTranslator.toJson(req))
 

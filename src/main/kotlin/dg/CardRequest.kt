@@ -5,6 +5,8 @@ package dg
  */
 data class CardRequest(var merchantRefNum:String) {
 
+    @Transient
+    var guid = "" // for internal use only and excluded from the json representation
     var amount = 0
     var settleWithAuth = true
     var card = Card()

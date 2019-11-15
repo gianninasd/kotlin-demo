@@ -1,4 +1,5 @@
 import dg.CardClient
+import dg.CardRequest
 import dg.PaymentRecord
 import java.io.File
 import java.time.Duration
@@ -35,8 +36,7 @@ fun main( args:Array<String> ) {
             file.forEachLine {
                 if (it.isNotEmpty()) {
                     val rec: PaymentRecord = PaymentRecord.parse(it)
-                    cardClient.purchase()
-
+                    cardClient.purchase( CardRequest.createFrom(rec) )
                     cnt++
                 }
             }
