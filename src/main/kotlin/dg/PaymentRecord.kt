@@ -5,15 +5,15 @@ package dg
  */
 class PaymentRecord {
 
-    var merchantRefNum: String? = null
-    var amount: String? = null
-    var cardNumber: String? = ""
-    var expiryMonth: String? = null
-    var expiryYear: String? = null
-    var firstName: String? = null
-    var lastName: String? = null
-    var email: String? = null
-    var postalCode: String? = null
+    var merchantRefNum: String = ""
+    var amount: String = ""
+    var cardNumber: String = ""
+    var expiryMonth: String = ""
+    var expiryYear: String = ""
+    var firstName: String = ""
+    var lastName: String = ""
+    var email: String = ""
+    var postalCode: String = ""
 
     override fun toString(): String {
         return "PaymentRecord{merchantRefNum=$merchantRefNum, amount=$amount" +

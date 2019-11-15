@@ -18,4 +18,19 @@ data class CardRequest(var merchantRefNum:String) {
 
         inner class CardExpiry(var month:String, var year:String)
     }
+
+    companion object Factory {
+        /**
+         * Creates an instance of this class based on PaymentRecord
+         */
+        fun createFrom(record: PaymentRecord): CardRequest {
+            var req = CardRequest(record.merchantRefNum)
+            req.amount = record.amount.toInt()
+            req.billingDetails.zip = record.postalCode
+            req.card.cardNum = record.cardNumber
+            req.card.cardExpiry.month = record.expiryMonth
+            req.card.cardExpiry.year = record.expiryYear
+            return req
+        }
+    }
 }
