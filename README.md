@@ -3,6 +3,7 @@ Kotlin File Processor
 A Kotlin program that reads a CSV file, and then for each record, calls a REST API that performs a card payment.
 
 ## Pre-requisites
+* Install latest Jetbrains Intellij IDEA (it will include Kotlin SDK)
 * Install Java 8+
 * Install Gradle 2.5.4
 
