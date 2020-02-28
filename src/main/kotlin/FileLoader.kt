@@ -2,6 +2,8 @@ import dg.ConfigUtils
 import dg.FileService
 import dg.SecretKeyNotFoundException
 import java.io.File
+import java.time.Duration
+import java.time.LocalDateTime
 import java.util.logging.Logger
 
 /**
@@ -32,8 +34,17 @@ fun main( args:Array<String> ) {
       if(file.isFile) {
         val fullFileName = file.name
         val fileName = service.extractFileName(fullFileName)
+				val fileId = service.create(workingDir, fullFileName)
 
-        logger.info("Processing [$fullFileName] records with file id $fileName")
+        logger.info("Processing [$fullFileName] records with file id $fileId")
+				var startTime = LocalDateTime.now()
+				cnt = 0
+
+				// TODO add line loop
+
+				var endTime = LocalDateTime.now()
+				val duration = Duration.between(endTime, startTime)
+				logger.info("Finished storing $cnt records for file id $fileId in $duration")
       }
     }
 	}
@@ -41,6 +52,7 @@ fun main( args:Array<String> ) {
 		logger.severe("Encryption key not found in environment variable DG_SECRET_KEY")
 	}
 	catch (ex:Exception) {
-		logger.severe("Unknown error occured!? $ex")
+		logger.severe("Unknown error occurred!? $ex")
+		ex.printStackTrace()
 	}
 }
