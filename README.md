@@ -22,3 +22,4 @@ Below are some reference web sites
 * https://khttp.readthedocs.io/en/latest/
 * https://www.petrikainulainen.net/programming/testing/running-kotlin-tests-with-gradle/
 * https://github.com/google/gson
+* https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
