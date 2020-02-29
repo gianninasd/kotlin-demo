@@ -1,5 +1,6 @@
 package dg
 
+import dg.dao.RecordDAO
 import java.io.File
 import java.security.MessageDigest
 
@@ -9,6 +10,7 @@ import java.security.MessageDigest
 class FileService {
 
   private val fileDAO = FileDAO()
+  private val recordDAO = RecordDAO()
 
   /**
    * Generates an ack file in the folder specified
@@ -38,6 +40,16 @@ class FileService {
       throw DupeFileException("")
 
     return fileId
+  }
+
+  /**
+   * Store the raw record in encrypted format
+   */
+  fun storeRecord( fileId:Int, record:String ) {
+    //def crypto = new CryptoUtil(secretKey: this.secretKey)
+    //def token = crypto.encrypt(record)
+
+    recordDAO.createInitial(fileId, record)
   }
 
   /**

@@ -42,12 +42,18 @@ fun main( args:Array<String> ) {
 					val fileId = service.create(workingDir, fullFileName)
 
 					logger.info("Processing [$fullFileName] records with file id $fileId")
-					var startTime = LocalDateTime.now()
+					val startTime = LocalDateTime.now()
 					cnt = 0
 
-					// TODO add line loop
+					// loop thru each line in file, ignoring lines starting with a pound character
+					file.forEachLine {
+						if( !it.startsWith("#") ) {
+							service.storeRecord( fileId, it )
+							cnt++
+						}
+					}
 
-					var endTime = LocalDateTime.now()
+					val endTime = LocalDateTime.now()
 					val duration = Duration.between(endTime, startTime)
 					logger.info("Finished storing $cnt records for file id $fileId in $duration")
           service.createAck(workingDir,fileName,"0","File received")
