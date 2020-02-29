@@ -23,3 +23,6 @@ Below are some reference web sites
 * https://www.petrikainulainen.net/programming/testing/running-kotlin-tests-with-gradle/
 * https://github.com/google/gson
 * https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
+
+## Notes
+If IDEA cannot resolve a Gradle dependency, open the Gradle window and click the rotate icon to "reimport all Gradle projects"
