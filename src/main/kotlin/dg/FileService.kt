@@ -7,7 +7,7 @@ import java.security.MessageDigest
 /**
  * Service class for all file operations
  */
-class FileService {
+class FileService(private val secretKey:String) {
 
   private val fileDAO = FileDAO()
   private val recordDAO = RecordDAO()
@@ -46,10 +46,10 @@ class FileService {
    * Store the raw record in encrypted format
    */
   fun storeRecord( fileId:Int, record:String ) {
-    //def crypto = new CryptoUtil(secretKey: this.secretKey)
-    //def token = crypto.encrypt(record)
+    val crypto = CryptoUtil(this.secretKey)
+    val token = crypto.encrypt(record)
 
-    recordDAO.createInitial(fileId, record)
+    recordDAO.createInitial(fileId, token)
   }
 
   /**

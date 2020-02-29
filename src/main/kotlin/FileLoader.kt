@@ -24,11 +24,11 @@ fun main( args:Array<String> ) {
 	val config = ConfigUtils.loadProperties()
 
 	try {
-		//val secretKey = System.getenv("DG_SECRET_KEY") ?: throw SecretKeyNotFoundException("")
+		val secretKey = System.getenv("DG_SECRET_KEY") ?: throw SecretKeyNotFoundException("")
 
-		var cnt = 0
+		var cnt:Int
 		val workingDir = config.getProperty("client.workingDir")
-    val service = FileService()
+    val service = FileService(secretKey)
 
 		logger.info("Processing files in $workingDir")
 
