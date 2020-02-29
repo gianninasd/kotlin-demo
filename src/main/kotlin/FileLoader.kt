@@ -27,15 +27,15 @@ fun main() {
 
 		var cnt:Int
 		val workingDir = config.getProperty("client.workingDir")
-    val service = FileService(secretKey, config)
+		val service = FileService(secretKey, config)
 
 		// TODO add infinite loop
 		logger.info("Processing files in $workingDir")
 
-    File(workingDir).walk().forEach { file ->
-      if(file.isFile) {
+		File(workingDir).walk().forEach { file ->
+			if(file.isFile) {
 				val fullFileName = file.name
-        var fileName = ""
+				var fileName = ""
 
 				try {
 					fileName = service.extractFileName(fullFileName)
@@ -56,28 +56,28 @@ fun main() {
 					val endTime = LocalDateTime.now()
 					val duration = Duration.between(endTime, startTime)
 					logger.info("Finished storing $cnt records for file id $fileId in $duration")
-          service.createAck(workingDir,fileName,"0","File received")
+					service.createAck(workingDir,fileName,"0","File received")
 				}
 				catch( ex:FileNotFoundException) {
 					logger.warning("File [$fullFileName] not found")
 				}
 				catch( ex:DupeFileException ) {
 					logger.warning("File [$fullFileName] already uploaded in the last 24 hrs")
-          service.createAck(workingDir,fileName,"-1","Duplicate file")
+					service.createAck(workingDir,fileName,"-1","Duplicate file")
 				}
 				catch( ex:Exception ) {
 					logger.severe("Unknown error occurred!? $ex")
 					service.createAck(workingDir,fileName,"-99","Unknown error")
 				}
 			}
-    }
+		}
 	}
 	catch (ex:SecretKeyNotFoundException) {
 		logger.severe("Encryption key not found in environment variable DG_SECRET_KEY")
 	}
 	catch (ex:Exception) {
 		logger.severe("Unknown error occurred!? $ex")
-    logger.log( Level.SEVERE,"Unknown error occurred!?2", ex)
+		logger.log( Level.SEVERE,"Unknown error occurred!?2", ex)
 		ex.printStackTrace()
 	}
 }
