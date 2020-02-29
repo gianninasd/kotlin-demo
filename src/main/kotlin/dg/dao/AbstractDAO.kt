@@ -1,8 +1,7 @@
 package dg.dao
 
 import org.apache.commons.dbcp2.BasicDataSource
-import java.sql.Connection
-import java.sql.PreparedStatement
+import java.sql.*
 
 /**
  * Base class for all DAO with re-usable methods
@@ -13,27 +12,39 @@ abstract class AbstractDAO {
    * Executes INSERT database operation using the SQL statement and data provided
    */
   fun insert( sqlStmt:String, data:Array<Any> ):Int {
-    val ds:BasicDataSource = getDataSource()
-    val cn:Connection = ds.getConnection()
-    val stmt:PreparedStatement = cn.prepareStatement(sqlStmt)
-    stmt.setString(1,data[0] as String)
-    stmt.setString(2,data[1] as String)
-    stmt.executeUpdate()
-    //cn.commit()
-
-    return 0
-    /*Sql sql = null
-    def id = 0
+    var ds:BasicDataSource? = null
+    var cn:Connection? = null
 
     try {
-      def ds = getDataSource(config)
-      sql = new Sql(ds)
-      def result = sql.executeInsert(sqlStmt, data)
-      id = result[0][0]
+      ds = getDataSource()
+      cn = ds.getConnection()
+      val stmt:PreparedStatement = cn.prepareStatement(sqlStmt, Statement.RETURN_GENERATED_KEYS)
+
+      // loop thru each data parameter and assign it to the statement
+      for( idx in data.indices ) {
+        when( data[idx] ) {
+          is String -> stmt.setString((idx + 1), data[idx] as String)
+          is Int -> stmt.setInt((idx + 1), data[idx] as Int)
+          is Double -> stmt.setDouble((idx + 1), data[idx] as Double)
+          is Date -> stmt.setDate((idx + 1), data[idx] as Date)
+        }
+      }
+
+      stmt.executeUpdate()
+
+      var generatedId = 0
+      val rs:ResultSet = stmt.generatedKeys
+
+      if( rs.next() ){
+        generatedId = rs.getInt(1)
+      }
+
+      return generatedId
     }
     finally {
-      sql.close() // returns connection to the pool
-    }*/
+      cn?.close()
+      ds?.close()
+    }
   }
 
   companion object {
