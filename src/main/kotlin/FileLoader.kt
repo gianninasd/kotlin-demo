@@ -5,6 +5,7 @@ import dg.SecretKeyNotFoundException
 import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
@@ -34,9 +35,10 @@ fun main( args:Array<String> ) {
     File(workingDir).walk().forEach { file ->
       if(file.isFile) {
 				val fullFileName = file.name
+        var fileName = ""
 
 				try {
-					val fileName = service.extractFileName(fullFileName)
+					fileName = service.extractFileName(fullFileName)
 					val fileId = service.create(workingDir, fullFileName)
 
 					logger.info("Processing [$fullFileName] records with file id $fileId")
@@ -48,9 +50,11 @@ fun main( args:Array<String> ) {
 					var endTime = LocalDateTime.now()
 					val duration = Duration.between(endTime, startTime)
 					logger.info("Finished storing $cnt records for file id $fileId in $duration")
+          service.createAck(workingDir,fileName,"0","File received")
 				}
 				catch( ex:DupeFileException ) {
 					logger.warning("File [$fullFileName] already uploaded in the last 24 hrs")
+          service.createAck(workingDir,fileName,"-1","Duplicate file")
 				}
 			}
     }
@@ -60,6 +64,7 @@ fun main( args:Array<String> ) {
 	}
 	catch (ex:Exception) {
 		logger.severe("Unknown error occurred!? $ex")
+    logger.log( Level.SEVERE,"Unknown error occurred!?2", ex)
 		ex.printStackTrace()
 	}
 }

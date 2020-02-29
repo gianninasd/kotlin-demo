@@ -11,6 +11,13 @@ class FileService {
   private val fileDAO = FileDAO()
 
   /**
+   * Generates an ack file in the folder specified
+   */
+  fun createAck( path:String, fileName:String, responseCode:String, responseMessage:String ) {
+    File("$path/$fileName.ack.csv").writeText("ACK,$responseCode,$responseMessage")
+  }
+
+  /**
    * Extracts only the filename without the extension
    */
   fun extractFileName( fullFileName:String ):String {
