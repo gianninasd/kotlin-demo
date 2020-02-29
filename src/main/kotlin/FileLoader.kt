@@ -1,4 +1,5 @@
 import dg.ConfigUtils
+import dg.DupeFileException
 import dg.FileService
 import dg.SecretKeyNotFoundException
 import java.io.File
@@ -32,20 +33,26 @@ fun main( args:Array<String> ) {
 
     File(workingDir).walk().forEach { file ->
       if(file.isFile) {
-        val fullFileName = file.name
-        val fileName = service.extractFileName(fullFileName)
-				val fileId = service.create(workingDir, fullFileName)
+				val fullFileName = file.name
 
-        logger.info("Processing [$fullFileName] records with file id $fileId")
-				var startTime = LocalDateTime.now()
-				cnt = 0
+				try {
+					val fileName = service.extractFileName(fullFileName)
+					val fileId = service.create(workingDir, fullFileName)
 
-				// TODO add line loop
+					logger.info("Processing [$fullFileName] records with file id $fileId")
+					var startTime = LocalDateTime.now()
+					cnt = 0
 
-				var endTime = LocalDateTime.now()
-				val duration = Duration.between(endTime, startTime)
-				logger.info("Finished storing $cnt records for file id $fileId in $duration")
-      }
+					// TODO add line loop
+
+					var endTime = LocalDateTime.now()
+					val duration = Duration.between(endTime, startTime)
+					logger.info("Finished storing $cnt records for file id $fileId in $duration")
+				}
+				catch( ex:DupeFileException ) {
+					logger.warning("File [$fullFileName] already uploaded in the last 24 hrs")
+				}
+			}
     }
 	}
 	catch (ex:SecretKeyNotFoundException) {

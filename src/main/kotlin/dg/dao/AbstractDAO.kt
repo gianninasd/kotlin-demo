@@ -43,7 +43,44 @@ abstract class AbstractDAO {
     }
     finally {
       cn?.close()
-      ds?.close()
+      //ds?.close()
+    }
+  }
+
+  /**
+   * Returns a single value from executing a SELECT database operation using the SQL statement and data provided
+   */
+  fun queryForInt( sqlStmt:String, data:Array<Any> ):Int {
+    var ds:BasicDataSource? = null
+    var cn:Connection? = null
+
+    try {
+      ds = getDataSource()
+      cn = ds.getConnection()
+      val stmt:PreparedStatement = cn.prepareStatement(sqlStmt)
+
+      // loop thru each data parameter and assign it to the statement
+      for( idx in data.indices ) {
+        when( data[idx] ) {
+          is String -> stmt.setString((idx + 1), data[idx] as String)
+          is Int -> stmt.setInt((idx + 1), data[idx] as Int)
+          is Double -> stmt.setDouble((idx + 1), data[idx] as Double)
+          is Date -> stmt.setDate((idx + 1), data[idx] as Date)
+        }
+      }
+
+      val rs:ResultSet = stmt.executeQuery()
+      var value = 0
+
+      if( rs.next() ){
+        value = rs.getInt(1)
+      }
+
+      return value
+    }
+    finally {
+      cn?.close()
+      //ds?.close()
     }
   }
 

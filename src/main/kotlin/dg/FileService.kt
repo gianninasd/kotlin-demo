@@ -24,11 +24,11 @@ class FileService {
    */
   fun create( workingDir:String, fileName:String ):Int {
     val fileHash = calculateHash(workingDir, fileName)
-    //val cnt = fileDAO.countInLast24hrs(fileHash)
+    val cnt = fileDAO.countInLast24hrs(fileHash)
     val fileId = fileDAO.create(fileName, fileHash)
 
-    /*if( cnt > 0 )
-      throw new DupeFileException()*/
+    if( cnt > 0 )
+      throw DupeFileException("")
 
     return fileId
   }
