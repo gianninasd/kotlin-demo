@@ -1,4 +1,4 @@
-package dg
+package dg.dao
 
 import dg.dao.AbstractDAO
 

@@ -1,5 +1,6 @@
 package dg
 
+import dg.dao.FileDAO
 import dg.dao.RecordDAO
 import java.io.File
 import java.security.MessageDigest
