@@ -1,11 +1,11 @@
 package dg.dao
 
-import dg.dao.AbstractDAO
+import java.util.*
 
 /**
  * DAO to interact with files
  */
-class FileDAO:AbstractDAO() {
+class FileDAO(config:Properties):AbstractDAO(config) {
 
   /**
    * Create a new file record entry, returning the file ID

@@ -11,7 +11,7 @@ class ConfigUtils {
 		/**
 		 * Loads our configuration file from the classpath
 		 */
-		fun loadProperties( fileName:String ): Properties {
+		fun loadProperties( fileName:String ):Properties {
 			val properties = Properties()
 			properties.load(ClassLoader.getSystemResourceAsStream(fileName))
 			return properties

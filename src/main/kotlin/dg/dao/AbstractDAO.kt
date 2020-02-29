@@ -2,21 +2,23 @@ package dg.dao
 
 import org.apache.commons.dbcp2.BasicDataSource
 import java.sql.*
+import java.sql.Date
+import java.util.*
 
 /**
  * Base class for all DAO with re-usable methods
  */
-abstract class AbstractDAO {
+abstract class AbstractDAO(private val config:Properties) {
 
   /**
    * Executes INSERT database operation using the SQL statement and data provided
    */
   fun insert( sqlStmt:String, data:Array<Any> ):Int {
-    var ds:BasicDataSource? = null
+    val ds:BasicDataSource?
     var cn:Connection? = null
 
     try {
-      ds = getDataSource()
+      ds = getDataSource(config)
       cn = ds.getConnection()
       val stmt:PreparedStatement = cn.prepareStatement(sqlStmt, Statement.RETURN_GENERATED_KEYS)
 
@@ -51,11 +53,11 @@ abstract class AbstractDAO {
    * Returns a single value from executing a SELECT database operation using the SQL statement and data provided
    */
   fun queryForInt( sqlStmt:String, data:Array<Any> ):Int {
-    var ds:BasicDataSource? = null
+    val ds:BasicDataSource?
     var cn:Connection? = null
 
     try {
-      ds = getDataSource()
+      ds = getDataSource(config)
       cn = ds.getConnection()
       val stmt:PreparedStatement = cn.prepareStatement(sqlStmt)
 
@@ -88,16 +90,16 @@ abstract class AbstractDAO {
     private var ds:BasicDataSource? = null
 
     // initializes and returns pooled data source
-    fun getDataSource(/* def config */):BasicDataSource {
+    fun getDataSource( config:Properties ):BasicDataSource {
       if( ds == null ) {
         ds = BasicDataSource()
-        ds?.setUrl("jdbc:mysql://localhost:3306/fileproc"/*config.url*/)
-        ds?.setUsername("root"/*config.username*/)
-        ds?.setPassword("root"/*config.password*/)
-        ds?.setDriverClassName("com.mysql.cj.jdbc.Driver"/*config.driverClassName*/)
-        ds?.setMinIdle(5/*config.minIdle*/)
-        ds?.setMaxIdle(10/*config.maxIdle*/)
-        ds?.setMaxOpenPreparedStatements(100/*config.maxOpenPreparedStatements*/)
+        ds?.setUrl(config.getProperty("db.url"))
+        ds?.setUsername(config.getProperty("db.username"))
+        ds?.setPassword(config.getProperty("db.password"))
+        ds?.setDriverClassName(config.getProperty("db.driverClassName"))
+        ds?.setMinIdle(config.getProperty("db.minIdle").toInt())
+        ds?.setMaxIdle(config.getProperty("db.maxIdle").toInt())
+        ds?.setMaxOpenPreparedStatements(config.getProperty("db.maxOpenPreparedStatements").toInt())
       }
 
       return ds!!

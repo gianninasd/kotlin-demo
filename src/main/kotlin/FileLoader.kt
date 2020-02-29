@@ -17,7 +17,7 @@ fun main() {
   val osName = System.getProperty("os.name")
   val osVersion  = System.getProperty("os.version")
 
-	logger.info("Kotlin ${KotlinVersion.CURRENT} File Loader running on $osName $osVersion")
+	logger.info("Kotlin ${KotlinVersion.CURRENT} File Loader running on $osName ($osVersion)")
 
 	// load application config
 	val config = ConfigUtils.loadProperties("config.properties")
@@ -27,7 +27,7 @@ fun main() {
 
 		var cnt:Int
 		val workingDir = config.getProperty("client.workingDir")
-    val service = FileService(secretKey)
+    val service = FileService(secretKey, config)
 
 		// TODO add infinite loop
 		logger.info("Processing files in $workingDir")

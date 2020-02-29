@@ -4,14 +4,15 @@ import dg.dao.FileDAO
 import dg.dao.RecordDAO
 import java.io.File
 import java.security.MessageDigest
+import java.util.*
 
 /**
  * Service class for all file operations
  */
-class FileService(private val secretKey:String) {
+class FileService(private val secretKey:String, config:Properties) {
 
-  private val fileDAO = FileDAO()
-  private val recordDAO = RecordDAO()
+  private val fileDAO = FileDAO(config)
+  private val recordDAO = RecordDAO(config)
 
   /**
    * Generates an ack file in the folder specified

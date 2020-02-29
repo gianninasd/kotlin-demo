@@ -1,5 +1,7 @@
 package dg.dao
 
+import java.util.*
+
 const val CREATE:String = """
     insert into file_records (file_id,status_cde,raw_record,creation_date,modification_date)
     values (?,?,?,now(),now())"""
@@ -7,7 +9,7 @@ const val CREATE:String = """
 /**
  * DAO to interact with file records
  */
-class RecordDAO:AbstractDAO() {
+class RecordDAO(config:Properties):AbstractDAO(config) {
 
   /**
    * Create a new record entry
