@@ -19,19 +19,10 @@ abstract class AbstractDAO(private val config:Properties) {
 
     try {
       ds = getDataSource(config)
-      cn = ds.getConnection()
+      cn = ds.connection
       val stmt:PreparedStatement = cn.prepareStatement(sqlStmt, Statement.RETURN_GENERATED_KEYS)
 
-      // loop thru each data parameter and assign it to the statement
-      for( idx in data.indices ) {
-        when( data[idx] ) {
-          is String -> stmt.setString((idx + 1), data[idx] as String)
-          is Int -> stmt.setInt((idx + 1), data[idx] as Int)
-          is Double -> stmt.setDouble((idx + 1), data[idx] as Double)
-          is Date -> stmt.setDate((idx + 1), data[idx] as Date)
-        }
-      }
-
+      applyData( stmt, data )
       stmt.executeUpdate()
 
       var generatedId = 0
@@ -45,7 +36,6 @@ abstract class AbstractDAO(private val config:Properties) {
     }
     finally {
       cn?.close()
-      //ds?.close()
     }
   }
 
@@ -58,19 +48,10 @@ abstract class AbstractDAO(private val config:Properties) {
 
     try {
       ds = getDataSource(config)
-      cn = ds.getConnection()
+      cn = ds.connection
       val stmt:PreparedStatement = cn.prepareStatement(sqlStmt)
 
-      // loop thru each data parameter and assign it to the statement
-      for( idx in data.indices ) {
-        when( data[idx] ) {
-          is String -> stmt.setString((idx + 1), data[idx] as String)
-          is Int -> stmt.setInt((idx + 1), data[idx] as Int)
-          is Double -> stmt.setDouble((idx + 1), data[idx] as Double)
-          is Date -> stmt.setDate((idx + 1), data[idx] as Date)
-        }
-      }
-
+      applyData( stmt, data )
       val rs:ResultSet = stmt.executeQuery()
       var value = 0
 
@@ -82,7 +63,20 @@ abstract class AbstractDAO(private val config:Properties) {
     }
     finally {
       cn?.close()
-      //ds?.close()
+    }
+  }
+
+  /**
+   * Loop thru each data parameter and assign it to the statement
+   */
+  private fun applyData( stmt:PreparedStatement, data:Array<Any> ) {
+    for( idx in data.indices ) {
+      when( data[idx] ) {
+        is String -> stmt.setString((idx + 1), data[idx] as String)
+        is Int -> stmt.setInt((idx + 1), data[idx] as Int)
+        is Double -> stmt.setDouble((idx + 1), data[idx] as Double)
+        is Date -> stmt.setDate((idx + 1), data[idx] as Date)
+      }
     }
   }
 
@@ -93,13 +87,13 @@ abstract class AbstractDAO(private val config:Properties) {
     fun getDataSource( config:Properties ):BasicDataSource {
       if( ds == null ) {
         ds = BasicDataSource()
-        ds?.setUrl(config.getProperty("db.url"))
-        ds?.setUsername(config.getProperty("db.username"))
-        ds?.setPassword(config.getProperty("db.password"))
-        ds?.setDriverClassName(config.getProperty("db.driverClassName"))
-        ds?.setMinIdle(config.getProperty("db.minIdle").toInt())
-        ds?.setMaxIdle(config.getProperty("db.maxIdle").toInt())
-        ds?.setMaxOpenPreparedStatements(config.getProperty("db.maxOpenPreparedStatements").toInt())
+        ds?.url = config.getProperty("db.url")
+        ds?.username = config.getProperty("db.username")
+        ds?.password = config.getProperty("db.password")
+        ds?.driverClassName = config.getProperty("db.driverClassName")
+        ds?.minIdle = config.getProperty("db.minIdle").toInt()
+        ds?.maxIdle = config.getProperty("db.maxIdle").toInt()
+        ds?.maxOpenPreparedStatements = config.getProperty("db.maxOpenPreparedStatements").toInt()
       }
 
       return ds!!
