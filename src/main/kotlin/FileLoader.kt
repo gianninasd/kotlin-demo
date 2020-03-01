@@ -10,7 +10,7 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
- * Groovy script for reading a CSV file and storing data in a database
+ * Kotlin script for reading a CSV file and storing data in a database
  */
 fun main() {
   val logger:Logger = Logger.getLogger("fileLoader")

@@ -30,7 +30,7 @@ dependencies {
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
 }
 
-// Define the main class for the application and JVM arguments
+// Define the default main class for the application and JVM arguments
 application {
     mainClassName = 'FileLoaderKt'
     applicationDefaultJvmArgs = ['-Djava.util.logging.config.file=f:/dev/kotlin-demo/build/resources/main/logging.properties']
@@ -38,4 +38,18 @@ application {
 
 test {
     useJUnitPlatform()
+}
+
+// start the FileLoader process
+task (runLoader, dependsOn: 'classes', type:JavaExec) {
+  main = 'FileLoaderKt'
+  classpath = sourceSets.main.runtimeClasspath
+  jvmArgs = ['-Djava.util.logging.config.file=f:/dev/kotlin-demo/build/resources/main/logging.properties']
+}
+
+// start the FileProc process
+task (runProc, dependsOn: 'classes', type:JavaExec) {
+  main = 'FileProcKt'
+  classpath = sourceSets.main.runtimeClasspath
+  jvmArgs = ['-Djava.util.logging.config.file=f:/dev/kotlin-demo/build/resources/main/logging.properties']
 }
