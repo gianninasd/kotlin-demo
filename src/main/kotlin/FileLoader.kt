@@ -4,6 +4,7 @@ import dg.FileService
 import dg.SecretKeyNotFoundException
 import java.io.File
 import java.io.FileNotFoundException
+import java.lang.Thread.sleep
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.logging.Level
@@ -29,46 +30,47 @@ fun main() {
 		val workingDir = config.getProperty("client.workingDir")
 		val service = FileService(secretKey, config)
 
-		// TODO add infinite loop
-		logger.info("Processing files in $workingDir")
+		while( true ){
+			logger.info("Processing files in $workingDir")
 
-		File(workingDir).walk().forEach { file ->
-			if(file.isFile) {
-				val fullFileName = file.name
-				var fileName = ""
+			File(workingDir).walk().forEach { file ->
+				if(file.isFile) {
+					val fullFileName = file.name
+					var fileName = ""
 
-				try {
-					fileName = service.extractFileName(fullFileName)
-					val fileId = service.create(workingDir, fullFileName)
+					try {
+						fileName = service.extractFileName(fullFileName)
+						val fileId = service.create(workingDir, fullFileName)
 
-					logger.info("Processing [$fullFileName] records with file id $fileId")
-					val startTime = LocalDateTime.now()
-					cnt = 0
+						logger.info("Processing [$fullFileName] records with file id $fileId")
+						val startTime = LocalDateTime.now()
+						cnt = 0
 
-					// loop thru each line in file, ignoring lines starting with a pound character
-					file.forEachLine {
-						if( !it.startsWith("#") ) {
-							service.storeRecord( fileId, it )
-							cnt++
+						// loop thru each line in file, ignoring lines starting with a pound character
+						file.forEachLine {
+							if(!it.startsWith("#")) {
+								service.storeRecord(fileId, it)
+								cnt++
+							}
 						}
-					}
 
-					val endTime = LocalDateTime.now()
-					val duration = Duration.between(endTime, startTime)
-					logger.info("Finished storing $cnt records for file id $fileId in $duration")
-					service.createAck(workingDir,fileName,"0","File received")
+						val endTime = LocalDateTime.now()
+						val duration = Duration.between(endTime, startTime)
+						logger.info("Finished storing $cnt records for file id $fileId in $duration")
+						service.createAck(workingDir, fileName, "0", "File received")
+					} catch(ex:FileNotFoundException) {
+						logger.warning("File [$fullFileName] not found")
+					} catch(ex:DupeFileException) {
+						logger.warning("File [$fullFileName] already uploaded in the last 24 hrs")
+						service.createAck(workingDir, fileName, "-1", "Duplicate file")
+					} catch(ex:Exception) {
+						logger.severe("Unknown error occurred!? $ex")
+						service.createAck(workingDir, fileName, "-99", "Unknown error")
+					}
 				}
-				catch( ex:FileNotFoundException) {
-					logger.warning("File [$fullFileName] not found")
-				}
-				catch( ex:DupeFileException ) {
-					logger.warning("File [$fullFileName] already uploaded in the last 24 hrs")
-					service.createAck(workingDir,fileName,"-1","Duplicate file")
-				}
-				catch( ex:Exception ) {
-					logger.severe("Unknown error occurred!? $ex")
-					service.createAck(workingDir,fileName,"-99","Unknown error")
-				}
+
+				logger.info("Going to sleep for 60s...")
+				sleep(60000)
 			}
 		}
 	}
