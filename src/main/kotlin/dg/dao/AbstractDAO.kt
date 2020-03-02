@@ -67,6 +67,22 @@ abstract class AbstractDAO(private val config:Properties) {
   }
 
   /**
+   * Executes a SELECT database operation using the SQL statement and data provided
+   * and returns the ResultSet
+   */
+  fun query( sqlStmt:String, data:Array<Any> ):ResultSet {
+    val ds:BasicDataSource?
+    val cn:Connection?
+
+    ds = getDataSource(config)
+    cn = ds.connection
+    val stmt:PreparedStatement = cn.prepareStatement(sqlStmt)
+
+    applyData( stmt, data )
+    return stmt.executeQuery()
+  }
+
+  /**
    * Loop thru each data parameter and assign it to the statement
    */
   private fun applyData( stmt:PreparedStatement, data:Array<Any> ) {
