@@ -1,9 +1,9 @@
-import dg.ConfigUtils
-import dg.CryptoUtil
-import dg.SecretKeyNotFoundException
+import dg.*
 import dg.dao.RecordDAO
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.concurrent.ExecutorCompletionService
+import java.util.concurrent.Executors
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -23,6 +23,8 @@ fun main() {
   try {
     val secretKey = System.getenv("DG_SECRET_KEY") ?: throw SecretKeyNotFoundException("")
 
+    val executor = Executors.newFixedThreadPool(config.getProperty("client.maxThreads").toInt())
+    val ecs = ExecutorCompletionService<CardResponse>(executor)
     val recordDAO = RecordDAO(config)
     val crypto = CryptoUtil(secretKey)
 
@@ -39,7 +41,7 @@ fun main() {
     if( recs.size > 0 ) {
       for(rec in recs) {
         val line = crypto.decrypt(rec.rawData)
-        //ecs.submit( new ProcessRequest(recordDAO, config.client, rec.recordId, line) )
+        //ecs.submit( ProcessRequest(recordDAO, config, rec.recordId, line) )
         submitCnt++
       }
     }
